@@ -118,7 +118,7 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
-// Login to Discord with your app's token
+// Login to Discord with your app's token (the bot one, not OAUTH) https://discord.com/developers/applications
 client.login(process.env.DISCORD_TOKEN);
 
 process.on('SIGTERM', () => {
