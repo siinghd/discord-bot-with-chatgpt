@@ -10,6 +10,12 @@ type Message = {
   role: 'system' | 'user' | 'assistant';
   content: string;
 };
+const MESSAGE_LIMIT = 20;
+const TIME_WINDOW = 30 * 60 * 1000; // 30 minutes in milliseconds
+const userMessageCount: Record<
+  string,
+  { count: number; timer: NodeJS.Timeout }
+> = {};
 
 type ConversationHistory = Message[];
 
@@ -43,6 +49,22 @@ client.on('interactionCreate', async (interaction) => {
     const userMessage = interaction.options.get('message')?.value as string;
 
     if (userMessage) {
+      if (userMessageCount[userId]?.count >= MESSAGE_LIMIT) {
+        await interaction.reply(
+          'You have reached the message limit. Please wait before sending more messages.'
+        );
+        return;
+      }
+
+      if (!userMessageCount[userId]) {
+        userMessageCount[userId] = {
+          count: 1,
+          timer: setTimeout(() => delete userMessageCount[userId], TIME_WINDOW),
+        };
+      } else {
+        userMessageCount[userId].count++;
+      }
+
       let conversationHistory = await getLastMessages(userId);
       conversationHistory = conversationHistory.reverse();
       console.log(conversationHistory);

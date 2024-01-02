@@ -2,6 +2,10 @@
   "name": "discordhelper",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "start-pm2-dev": "pm2 restart pm2.dev.config.js --update-env",
+    "start-pm2-prod": "pm2 restart pm2.prod.config.js --update-env"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
