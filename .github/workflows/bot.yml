@@ -44,7 +44,7 @@ jobs:
         with: 
           bun-version: "latest"
       - run: bun install
-      - run: bun build index.ts --outdir ./out --target bun
+      - run: bun build bot.ts --outdir ./out --target bun
 
   deploy:
     timeout-minutes: 30
