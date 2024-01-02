@@ -4,7 +4,7 @@ env:
   PROJECT_NAME: discord-bot-chatgpt
   PROJECT_TYPE: backend
   WORKING_DIRECTORY: backend
-  CURR_WORKING_DIRECTORY: ./backend
+  CURR_WORKING_DIRECTORY: ./
   DEV_APP_PORT:
   DEV_DOMAIN_NAME: 
   PROD_APP_PORT:
@@ -91,7 +91,7 @@ jobs:
           username: ${{ env.SERVER_USER }}
           password: ${{ env.SERVER_PASSWORD }}
           script: |
-            SITE_PATH="/home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/${{ env.WORKING_DIRECTORY }}"
+            SITE_PATH="/home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/
             rm -rf $SITE_PATH
             mkdir -p $SITE_PATH
 
@@ -112,7 +112,7 @@ jobs:
           password: ${{ env.SERVER_PASSWORD }}
           script: |
 
-            SITE_PATH="/home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/${{ env.WORKING_DIRECTORY }}"
+            SITE_PATH="/home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/
             cd $SITE_PATH
             ~/.bun/bin/bun install
             ~/.bun/bin/bun build bot.ts --outdir ./out --target bun
