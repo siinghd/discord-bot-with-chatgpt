@@ -16,6 +16,7 @@ const userMessageCount: Record<
   string,
   { count: number; timer: NodeJS.Timeout }
 > = {};
+const userProcessingState: Record<string, boolean> = {};
 
 type ConversationHistory = Message[];
 
@@ -49,6 +50,12 @@ client.on('interactionCreate', async (interaction) => {
     const userMessage = interaction.options.get('message')?.value as string;
 
     if (userMessage) {
+      if (userProcessingState[userId]) {
+        await interaction.reply(
+          'Your previous request is still being processed. Please wait.'
+        );
+        return;
+      }
       if (userMessageCount[userId]?.count >= MESSAGE_LIMIT) {
         await interaction.reply(
           'You have reached the message limit. Please wait before sending more messages.'
@@ -67,7 +74,7 @@ client.on('interactionCreate', async (interaction) => {
 
       let conversationHistory = await getLastMessages(userId);
       conversationHistory = conversationHistory.reverse();
-      console.log(conversationHistory);
+
       conversationHistory.push({
         role: 'user',
         content: `${userMessage}, the response must be 1980 characters or fewer in length, this is really important.`,
@@ -80,6 +87,7 @@ client.on('interactionCreate', async (interaction) => {
       );
 
       await interaction.deferReply();
+      userProcessingState[userId] = true;
       const conciseSystemMessage =
         'Please keep your response concise, ideally under 1980 characters.';
       const openaiResponse = await openai.chat.completions.create({
@@ -107,6 +115,7 @@ client.on('interactionCreate', async (interaction) => {
       } else {
         await interaction.editReply(botResponse);
       }
+      userProcessingState[userId] = false;
       saveMessage(
         userId,
         botResponse || 'Something went wrong...',
