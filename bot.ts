@@ -96,7 +96,7 @@ client.on('interactionCreate', async (interaction) => {
           { role: 'system', content: conciseSystemMessage },
           ...conversationHistory,
         ],
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-3.5-turbo-0125',
       });
       const MAX_DISCORD_MESSAGE_LENGTH = 2000;
       const botResponse = openaiResponse.choices[0].message.content || '';
